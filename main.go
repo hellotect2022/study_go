@@ -6,12 +6,15 @@ import (
 	"newProj/accounts"
 	"newProj/channel"
 	"newProj/mydict"
+	"newProj/scrapper_goroutine"
 	"newProj/tutorial"
 )
 
 func main() {
+	scrapper_goroutine.ScrapperMain()
+	//scrapper.ScrapperMain()
 	//goroutineTest()
-	urlChecker()
+	//urlChecker()
 	// dictionary()
 	// account()
 	// test()
