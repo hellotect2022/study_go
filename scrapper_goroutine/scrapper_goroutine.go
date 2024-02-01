@@ -27,18 +27,24 @@ type JobExtracted struct {
 
 func ScrapperMain() {
 	var allJobs []JobExtracted
+	channelMain := make(chan []JobExtracted)
 	pages := getPages()
 	//fmt.Println(pages)
 	for i := 0; i < pages; i++ {
-		extractedJobs := getPage(i + 1)
+		go getPage(i+1, channelMain)
+	}
+
+	for i := 0; i < pages; i++ {
+		extractedJobs := <-channelMain
 		allJobs = append(allJobs, extractedJobs...)
 	}
 	writeJobs(allJobs)
 	fmt.Println(allJobs)
 }
 
-func getPage(page int) []JobExtracted {
+func getPage(page int, channelMain chan<- []JobExtracted) {
 	var jobsForPage = []JobExtracted{}
+	channel := make(chan JobExtracted)
 	pageURL := baseURL + "&recruitPage=" + strconv.Itoa(page)
 	fmt.Println("request pag : " + pageURL)
 	res, err := http.Get(pageURL)
@@ -52,18 +58,29 @@ func getPage(page int) []JobExtracted {
 	recruit := doc.Find(".item_recruit")
 	//fmt.Println(recruit.Html())
 	recruit.Each(func(i int, card *goquery.Selection) {
-		id, _ := card.Attr("value")
-		title := cleanString(card.Find(".job_tit").Find("span").Text())
-		url, _ := card.Find(".job_tit").Find("a").Attr("href")
-		date := cleanString(card.Find(".job_date").Find("span").Text())
-		condition := cleanString(card.Find(".job_condition").Find("span").Text())
-		jobSelector := cleanString(card.Find(".job_sector").Find("a").Text())
-		jobExtracted := JobExtracted{id: id, title: title, url: "https://www.saramin.co.kr" + url, date: date, condition: condition, jobSelector: jobSelector}
-		// fmt.Println(jobExtracted)
-		// fmt.Println("++++")
-		jobsForPage = append(jobsForPage, jobExtracted)
+		go extractJob(card, channel)
+
 	})
-	return jobsForPage
+
+	for i := 0; i < recruit.Length(); i++ {
+		jobExtracted := <-channel
+		jobsForPage = append(jobsForPage, jobExtracted)
+	}
+
+	channelMain <- jobsForPage
+}
+
+func extractJob(card *goquery.Selection, channel chan<- JobExtracted) {
+	id, _ := card.Attr("value")
+	title := cleanString(card.Find(".job_tit").Find("span").Text())
+	url, _ := card.Find(".job_tit").Find("a").Attr("href")
+	date := cleanString(card.Find(".job_date").Find("span").Text())
+	condition := cleanString(card.Find(".job_condition").Find("span").Text())
+	jobSelector := cleanString(card.Find(".job_sector").Find("a").Text())
+	jobExtracted := JobExtracted{id: id, title: title, url: "https://www.saramin.co.kr" + url, date: date, condition: condition, jobSelector: jobSelector}
+	// fmt.Println(jobExtracted)
+	// fmt.Println("++++")
+	channel <- jobExtracted
 }
 
 func writeJobs(jobs []JobExtracted) {
