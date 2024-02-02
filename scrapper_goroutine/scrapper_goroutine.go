@@ -12,7 +12,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-var baseURL string = "https://www.saramin.co.kr/zf_user/search/recruit?&searchword=python"
+var baseURL string = "https://www.saramin.co.kr"
 
 type JobExtracted struct {
 	id    string
@@ -25,9 +25,12 @@ type JobExtracted struct {
 	jobSelector string
 }
 
-func ScrapperMain() {
+func ScrapperMain(term string) {
 	var allJobs []JobExtracted
 	channelMain := make(chan []JobExtracted)
+
+	baseURL = baseURL + "/zf_user/search/recruit?&searchword=" + term
+
 	pages := getPages()
 	//fmt.Println(pages)
 	for i := 0; i < pages; i++ {

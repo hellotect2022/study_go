@@ -6,12 +6,14 @@ import (
 	"newProj/accounts"
 	"newProj/channel"
 	"newProj/mydict"
-	"newProj/scrapper_goroutine"
+	"newProj/server"
 	"newProj/tutorial"
 )
 
 func main() {
-	scrapper_goroutine.ScrapperMain()
+	//os.Remove("./jobs.csv")
+	server.EchoStart()
+	//scrapper_goroutine.ScrapperMain("go")
 	//scrapper.ScrapperMain()
 	//goroutineTest()
 	//urlChecker()
