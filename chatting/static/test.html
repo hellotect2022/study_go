@@ -1,20 +1,33 @@
-<div style="font-size:40px; font-weight: bold;"> hello test!!</div>
-<div id="chattingArea" style="border-style: double; border-radius: 2%; border-width: 2; height: 200px; width: 400px; overflow-y: scroll; overflow-x: hidden; display: flex;flex-direction: column;" >
-    
-  
-    <div name="tester21" style="padding: 3px; width: 70%; display: flex; justify-content: flex-end;flex-direction: column;">
-        <div style="border: 2px solid black; border-radius: 10%;">tester21</div>
-        <div style="overflow-wrap: break-word; padding: 3px;">Hello, server! I'm 'tester21</div>
-    </div>
-    
-    <div name="newbie" style="padding: 3px;display: flex;justify-content: flex-start; align-items: flex-end; flex-direction: column;">
-        <div style="border: 2px solid black; border-radius: 10%;">newbie</div>
-        <div style="overflow-wrap: break-word;">Hello, server! I'm 'newbie</div>
-    </div>
-    
-    <div name="newbie" style="padding: 3px;width: 70%;display: flex;justify-content: flex-start; flex-direction: column;">
-        <div style="border: 2px solid black; border-radius: 10%;">newbie</div>
-        <div style="overflow-wrap: break-word;">sadf</div>
-    </div>
 
+<div style="width: 100%; display: flex; justify-content: space-between;">
+    <section style="width:30%; border-width: 2; border-style: solid; margin: 5px;">
+        <h1> hello !! 여기서 현재 생성된 방 입니다.</h1>
+        <div id="1" onclick="test(this)" style="width: 80%; ">Room 입니다. </div>
+    </section>
+
+    <section style="width:70%; border-width: 2; border-style: solid;  margin: 5px;">
+        <h1> hello !! 여기는 해당 방에 대한 채팅방입니다. </h1>
+        <div id="chattingArea" style="border-style: double; border-radius: 2%; border-width: 2; height: 200px; width: 99%; overflow-y: scroll; overflow-x: hidden; display: flex;flex-direction: column;" >
+            
+        </div>
+
+        <div id="input" style="padding: 10px;">
+            <div id="joinInput">
+                <input type="text" name="id" placeholder="아이디 입력">
+                <button onclick="joinService()">가입</button>
+            </div>
+            <div id="textInput">
+                <input type="text" name="message" placeholder="메세지 입력">
+                <button id="send" onclick="sendMessage()">send</button>
+                <button onclick="outRoom()">나가기</button>
+            </div>
+        </div>
+    </section>
 </div>
+
+<script>
+    function test(dom){
+        console.log(dom, dom.id)
+    }
+
+</script>
