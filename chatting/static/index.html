@@ -1,48 +1,133 @@
 <h1> hello !! this is Chatting Application</h1>
-<input type="text" name="message" placeholder="메세지 입력">
-<button id="send" onclick="sendMessage()">send</button>
-<button onclick="outRoom()">나가기</button>
+
+<div id="chattingArea" style="border-style: double; border-radius: 2%; border-width: 2; height: 200px; width: 80%; overflow-y: scroll; overflow-x: hidden; display: flex;flex-direction: column;" >
+    
+</div>
+
+<div id="input" style="padding: 10px;">
+    <div id="joinInput">
+        <input type="text" name="id" placeholder="아이디 입력">
+        <button onclick="joinService()">가입</button>
+    </div>
+    <div id="textInput">
+        <input type="text" name="message" placeholder="메세지 입력">
+        <button id="send" onclick="sendMessage()">send</button>
+        <button onclick="outRoom()">나가기</button>
+    </div>
+</div>
 
 <script src="./js/socket-io-client/socket.io.js"></script>
 <script>
 
+var chattingArea = document.getElementById("chattingArea");
+var id="";
+const inputDiv = document.getElementById("joinInput");
+const textInputDiv = document.getElementById("textInput");
+var socket;
+
+var contents = {
+    email:'',
+    username:'',
+    message:''
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    inputDiv.style.display = "block";
+    textInputDiv.style.display = "none";
+});
+
+
+function scrollToBottom() {
+    var chattingArea = document.getElementById("chattingArea");
+    chattingArea.scrollTop = chattingArea.scrollHeight;
+}
+
+function joinService(){
+    id = document.querySelector('input[name="id"]').value;
+    console.log('id : ',id)
+    // 연결 이벤트 핸들러
+    connectSocket(id)
+    inputDiv.style.display = "none";
+    textInputDiv.style.display = "block";
+
+}
+
 function sendMessage(){
     var message = document.querySelector('input[name="message"]');
-    console.log(message.value)
-    socket.send(message.value)
+    console.log()
+    if (message.value.trim().length == 0) return ;
+    contents.message = message.value;
+    socket.send(JSON.stringify(contents));
+    message.value="";
 }
+
+var brTag = document.createElement("br");
+function appenChatting(messageStruct){
+    var newDiv = document.createElement("div");
+    newDiv.setAttribute('name', messageStruct.username);
+    newDiv.style.padding="3px";
+    newDiv.style.display = 'flex';
+    if (id == messageStruct.username) {
+        newDiv.style.justifyContent = 'flex-end';
+    }else {
+        newDiv.style.justifyContent = 'flex-start';
+    }
+
+    var newSpan = document.createElement("span");
+    newSpan.style.border = '2px solid black';
+    newSpan.style.borderRadius = '10%';
+    newSpan.textContent = messageStruct.username;
+
+    var newDiv2 = document.createElement("div");
+    newDiv2.style.overflowWrap = 'break-word';
+    newDiv2.style.padding="3px";
+    newDiv2.textContent = messageStruct.message;
+
+    newDiv.appendChild(newSpan);
+    newDiv.appendChild(newDiv2);
+    chattingArea.appendChild(newDiv);
+    scrollToBottom()
+}
+
 
 function outRoom(){
     // 연결 종료
     socket.close();
+    inputDiv.style.display = "block";
+    textInputDiv.style.display = "none";
 }
 
-const socket = new WebSocket('ws://localhost:7777/ws');
+function connectSocket(name){
+    socket = new WebSocket('ws://localhost:7777/ws');
 
-// 연결 이벤트 핸들러
-socket.addEventListener('open', (event) => {
-    console.log('Connected to server');
-    
-    // 서버로 메시지 전송
-    socket.send('Hello, server!');
-});
+    socket.addEventListener('open', (event) => {
+        console.log('Connected to server',);
+        // 서버로 메시지 전송
+        contents.username= name;
+        contents.message = `Hello, server! I\'m '${name}`;
+        socket.send(JSON.stringify(contents));
+    });
 
-// 서버로부터 메시지를 받는 이벤트 핸들러
-socket.addEventListener('message', (event) => {
-    console.log('Received message from server:', event.data);
-    
-    
-});
+    // 서버로부터 메시지를 받는 이벤트 핸들러
+    socket.addEventListener('message', (event) => {
+        console.log('Received message from server:', event.data);
+        appenChatting(JSON.parse(event.data))
+        
+    });
 
-// 연결 종료 이벤트 핸들러
-socket.addEventListener('close', (event) => {
-    console.log('Connection closed');
-});
+    // 연결 종료 이벤트 핸들러
+    socket.addEventListener('close', (event) => {
+        console.log('Connection closed');
+    });
 
-// 에러 이벤트 핸들러
-socket.addEventListener('error', (event) => {
-    console.error('WebSocket error:', event);
-});
+    // 에러 이벤트 핸들러
+    socket.addEventListener('error', (event) => {
+        console.error('WebSocket error:', event);
+    });
+
+    return socket;
+}
+
     // // 소켓 서버의 주소로 연결 
     // const socket = io("http://localhost:7777")
 

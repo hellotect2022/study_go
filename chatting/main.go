@@ -9,8 +9,8 @@ import (
 )
 
 var clients = make(map[*websocket.Conn]bool) // websocket 에대한 포인터지정
-// var broadcast = make(chan Message)           // 클라이언트에서 보낸 메세지 큐잉
-var broadcast = make(chan string)
+var broadcast = make(chan Message)           // 클라이언트에서 보낸 메세지 큐잉
+//var broadcast = make(chan string)
 
 var upgrader = websocket.Upgrader{}
 
@@ -36,7 +36,6 @@ func main() {
 
 // 소켓연결
 func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprint(w, "Hello, World!")
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatal("upgrader error :", err)
@@ -46,25 +45,24 @@ func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
 	defer conn.Close()
 
 	clients[conn] = true
-
+	fmt.Println("socket 연결된 client 수 :", len(clients))
+	//fmt.Println("socket 연결된 client :", conn)
 	for {
-		//var msg Message
+		var messageStruct Message
 		//_ = msg
-		_, msg, err := conn.ReadMessage()
+		//_, msg, err := conn.ReadMessage()
+		err := conn.ReadJSON(&messageStruct)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("err (conn.ReadJSON(&messageStruct)) : ", err)
+			delete(clients, conn)
 			return
 		}
-		fmt.Println("Received message:", msg)
-		fmt.Println("Received message:", string(msg))
+		//fmt.Println("Received message:", msg)
+		//fmt.Println("Received message:", string(*messageStruct))
 
-		err = conn.WriteMessage(websocket.TextMessage, []byte("Hello, client!"))
-		if err != nil {
-			log.Println(err)
-			return
-		}
+		fmt.Println("Message : ", messageStruct)
 
-		broadcast <- string(msg)
+		broadcast <- messageStruct
 	}
 
 }
@@ -74,11 +72,12 @@ func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
 func broadCastMessages() {
 	for {
 		// 채널을 통해서 다음 메세지를 받는다.
-		msg := <-broadcast
+		messageStruct := <-broadcast
 		// 현재 접속중인 클라이언트에게 메세지를 보낸다.
 		for client := range clients {
-			fmt.Println("client는 과연 어떻게 생겼을까? : ", client)
-			err := client.WriteMessage(websocket.TextMessage, []byte(msg))
+			//fmt.Println("client는 과연 어떻게 생겼을까? : ", client)
+			//err := client.WriteMessage(websocket.TextMessage, []byte(msg))
+			err := client.WriteJSON(messageStruct)
 			if err != nil {
 				log.Fatal("broadCastMessages error :", err)
 				client.Close()
