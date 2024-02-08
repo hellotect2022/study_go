@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"newProj/chatting/staticRouter"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,6 +15,13 @@ var broadcast = make(chan Message)           // 클라이언트에서 보낸 메
 
 var upgrader = websocket.Upgrader{}
 
+var tempRoomList = make(map[int]RoomInfo)
+
+type RoomInfo struct {
+	RoomId int      `json: "roomId"`
+	Member []string `json:"member"`
+}
+
 type Message struct {
 	Email    string `json:"email"` // 직렬화 및 역 직렬화 시에 매핑해주는 필드명
 	Username string `json:"username"`
@@ -21,8 +29,9 @@ type Message struct {
 }
 
 func main() {
-	fs := http.FileServer(http.Dir("./static")) // 정적 파일 서버 생성
-	http.Handle("/", fs)
+	// 정적 파일 출력 Routing
+	staticRouter.RoutingStaticPage("./staticRouter/html")
+
 	// websocket으로 루팅을 연결
 	http.HandleFunc("/ws", handleSocketConnection)
 	go broadCastMessages()
@@ -46,6 +55,13 @@ func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
 
 	clients[conn] = true
 	fmt.Println("socket 연결된 client 수 :", len(clients))
+
+	// 임이의 room number 를 가져와서 대입하고 roomId 를 전달한다.
+	err = conn.WriteMessage(websocket.TextMessage, []byte("msg"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	//fmt.Println("socket 연결된 client :", conn)
 	for {
 		var messageStruct Message

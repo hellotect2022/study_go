@@ -1,0 +1,90 @@
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 400px;
+        margin: 100px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    .form-group label {
+        display: block;
+        font-weight: bold;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .form-group input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+    }
+    .form-group input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+<div class="container">
+    <h2>임시 채팅 서비스 입니다</h2>    
+    <form id="login-form" method="post">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Login">
+        </div>
+    </form>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 폼이 제출될 때 실행될 함수를 정의합니다.
+    document.querySelector("#login-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // 기본 제출 동작을 막습니다.
+
+        // 폼 데이터를 수집하여 JavaScript 객체로 변환합니다.
+        const formData = {
+            username: encodeURIComponent(document.querySelector("#username").value),
+            password: encodeURIComponent(document.querySelector("#password").value)
+        };
+
+        // AJAX 요청을 보냅니다.
+        fetch("/postLogin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json()) // 응답을 JSON으로 변환합니다.
+        .then(data => {
+            // 처리된 값에 따라 다른 경로로 라우팅합니다.
+             if (data.status = "success") {
+                 window.location.href = "/chatRoom.html"; // 성공했을 때의 경로
+             } 
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            // 오류가 발생했을 때의 처리를 추가할 수 있습니다.
+        });
+    });
+});
+</script>
