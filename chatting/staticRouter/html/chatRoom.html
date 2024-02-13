@@ -1,1 +1,57 @@
 <h1>chatRoom</h1>
+<div style="flex-direction: row; display: flex; justify-content: flex-start; align-items: flex-start;">
+    <section style="border-width: 2; border-style: groove; width: 10%; min-width: 100px; height: 400px; max-height: 400px; overflow-y: auto;">
+        <h3 style="text-align: center;">사용자 목록</h3>
+        <ul id="user-list" style="list-style-type: none; padding-left: 0; overflow-x: auto;"></ul>
+    </section>
+    <section style="border-width: 2; border-style: groove; width:20%; height: 400px; max-height: 400px; overflow-y: auto;">
+        <h3 style="text-align: center;">현재 생성된 방 목록</h3>
+        <ul id="room-list" style="list-style-type: none; padding-left: 0; overflow-x: auto;"></ul>
+    </section>
+    <section style="border-width: 2; border-style: groove; width: 70%; height: 400px; max-height: 400px; overflow-y: auto;">
+        <h3 style="text-align: center;">채팅방</h3>
+        <ul id="chat-box" style="list-style-type: none; padding-left: 0; overflow-x: auto;"></ul>
+    </section>
+    
+    <button onclick="test()">테스트</button>
+</div>
+
+<script src="./js/socket.io-client/socket.io.js">
+var socket;
+chatServerWebsocketInit();
+
+document.addEventListener("DOMContentLoaded", function() {
+    
+});
+
+function chatServerWebsocketInit() {
+    console.log("init!!")
+    socket = connectSocket();
+    socket.addEventListener('open', (event) => {
+        console.log('Connected to server');
+    })
+
+    socket.addEventListener('message', (event) => {
+        console.log('Received message from server:', event.data); 
+    });
+
+    socket.addEventListener('close', (event) => {
+        console.log('Connection closed');
+    });
+
+    socket.addEventListener('error', (event) => {
+        console.error('WebSocket error:', event);
+    });
+}
+
+function connectSocket(){
+    return new WebSocket('ws://localhost:7777/ws');
+}
+
+function test() {
+    var targetNode = document.getElementById("user-list");
+    var newDiv = document.createElement("div");
+    newDiv.textContent="heello";
+    targetNode.appendChild(newDiv);
+}
+</script>

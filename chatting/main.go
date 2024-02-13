@@ -36,11 +36,7 @@ func main() {
 	http.HandleFunc("/ws", handleSocketConnection)
 	go broadCastMessages()
 
-	err := http.ListenAndServe(":7777", nil)
-	if err != nil {
-		log.Fatal("ListenAndserve: ", err)
-	}
-
+	log.Fatal(http.ListenAndServe(":7777", nil))
 }
 
 // 소켓연결

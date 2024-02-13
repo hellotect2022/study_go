@@ -57,7 +57,7 @@ func requestPostReturnJson(w http.ResponseWriter, r *http.Request, requestBody i
 
 	// 요청 바디를 읽어옵니다.
 	body, err := io.ReadAll(r.Body)
-	fmt.Println("body : ", string(body))
+	//fmt.Println("body : ", string(body))
 	if err != nil {
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return err
@@ -66,7 +66,7 @@ func requestPostReturnJson(w http.ResponseWriter, r *http.Request, requestBody i
 
 	// JSON 데이터를 파싱하여 LoginForm 구조체에 저장합니다.
 	err = json.Unmarshal(body, &requestBody)
-	fmt.Println("json.Unmarshal : ", requestBody)
+	//fmt.Println("json.Unmarshal : ", requestBody)
 	if err != nil {
 		http.Error(w, "Failed to parse JSON body", http.StatusBadRequest)
 		return err
