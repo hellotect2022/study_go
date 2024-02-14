@@ -1,4 +1,9 @@
-package model
+package chatClient
+
+type User struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
 
 type ResponseData struct {
 	Status  string      `json:"status"`

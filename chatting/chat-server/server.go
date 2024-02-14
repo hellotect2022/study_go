@@ -4,43 +4,58 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"newProj/chatting/staticRouter"
 
 	"github.com/gorilla/websocket"
 )
 
 var clients = make(map[*websocket.Conn]bool) // websocket 에대한 포인터지정
 var broadcast = make(chan Message)           // 클라이언트에서 보낸 메세지 큐잉
-//var broadcast = make(chan string)
-
+// var broadcast = make(chan string)
 var upgrader = websocket.Upgrader{}
 
-var tempRoomList = make(map[int]RoomInfo)
+// var tempRoomList = make(map[int]RoomInfo)
+// type RoomInfo struct {
+// 	RoomId int      `json: "roomId"`
+// 	Member []string `json:"member"`
+// }
 
-type RoomInfo struct {
-	RoomId int      `json: "roomId"`
-	Member []string `json:"member"`
+type ClientsInfo struct {
+	userId        string
+	joinedRoom    map[string]bool
+	onConnected   bool
+	websocketConn *websocket.Conn
 }
 
+var clientsTest = make(map[string]ClientsInfo)
+
 type Message struct {
+	Type     string `json:"type"`
+	UserID   string `json:"userId"`
 	Email    string `json:"email"` // 직렬화 및 역 직렬화 시에 매핑해주는 필드명
 	Username string `json:"username"`
 	Message  string `json:"message"`
 }
 
 func main() {
-	// 정적 파일 출력 Routing
-	staticRouter.RoutingStaticPage("./staticRouter/html")
-
 	// websocket으로 루팅을 연결
 	http.HandleFunc("/ws", handleSocketConnection)
 	go broadCastMessages()
-
+	fmt.Println("websocket Server is running on port 7777...")
 	log.Fatal(http.ListenAndServe(":7777", nil))
 }
 
+// func generateUserID(clients *ClientsInfo) {
+// 	// 0 이상 100 미만의 임의의 정수를 생성합니다.
+// 	_, exists := clientsTest[randomNumber]
+// 	if !exists {
+// 		clients.userId = randomNumber
+// 		clientsTest[randomNumber] = *clients
+// 	}
+// }
+
 // 소켓연결
 func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Fatal("upgrader error :", err)
@@ -49,33 +64,36 @@ func handleSocketConnection(w http.ResponseWriter, r *http.Request) {
 
 	defer conn.Close()
 
-	clients[conn] = true
-	fmt.Println("socket 연결된 client 수 :", len(clients))
-
-	// 임이의 room number 를 가져와서 대입하고 roomId 를 전달한다.
-	err = conn.WriteMessage(websocket.TextMessage, []byte("msg"))
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	//fmt.Println("socket 연결된 client :", conn)
 	for {
 		var messageStruct Message
-		//_ = msg
-		//_, msg, err := conn.ReadMessage()
 		err := conn.ReadJSON(&messageStruct)
 		if err != nil {
 			fmt.Println("err (conn.ReadJSON(&messageStruct)) : ", err)
 			delete(clients, conn)
 			return
 		}
-		//fmt.Println("Received message:", msg)
-		//fmt.Println("Received message:", string(*messageStruct))
 
-		fmt.Println("Message : ", messageStruct)
+		switch messageStruct.Type {
+		case "connect":
+			connectUser(&messageStruct, conn)
+			break
+		case "message":
+			fmt.Print("메세지를 받았음")
+			//broadcast <- messageStruct
+			break
+		}
 
-		broadcast <- messageStruct
 	}
+
+}
+
+func connectUser(messageStruct *Message, conn *websocket.Conn) {
+	userID := messageStruct.UserID
+	clientsTest[userID] = ClientsInfo{userId: userID, onConnected: true, websocketConn: conn}
+
+	fmt.Println("clinet숫자 : ", len(clientsTest))
+	fmt.Println("clinet 들 : ", clientsTest)
 
 }
 
