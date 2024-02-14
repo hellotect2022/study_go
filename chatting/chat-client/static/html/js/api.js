@@ -65,7 +65,9 @@ async function getUserListAll(event) {
                     newDiv.addEventListener('click',function(event){
                         console.log('저는 이것 입니다.', event.target)
                         if (confirm(`${event.target.textContent} 와 채팅을 하시겠습니까?`)) {
-                            // 여기서 소켓을 연결하고
+                            // 방을 생성한다. 
+                            var userMember = event.target.getAttribute('id')
+                            createRoom(userMember);
                         }
                     })
                 }
@@ -81,9 +83,52 @@ async function getUserListAll(event) {
     }
 }
 
-function connectSocket(){
-    return new WebSocket('ws://localhost:7777/ws');
+async function createRoom(joinUserId){
+    try {
+        const formData = {};
+        var creatorId = localStorage.getItem('userId');
+        formData.creator = creatorId;
+        formData.members = [joinUserId, creatorId]
+        // AJAX 요청을 보냅니다.
+        const response = await fetch("/createRoom", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(formData)
+        });
+
+        // 응답을 JSON으로 변환합니다.
+        const data = await response.json();
+
+        // 처리된 값에 따라 다른 경로로 라우팅합니다.
+        if (data.status === "success") {
+            console.log("createRoom-message : ", data)
+            createRoomUIComponent(data.result);
+        }
+    }catch (error) {
+        console.error("Error:", error);
+        // 오류가 발생했을 때의 처리를 추가할 수 있습니다.
+    }
 }
+
+function createRoomUIComponent(params){
+    var targetNode = document.getElementById("room-list");
+    var newDiv = document.createElement("div");
+    newDiv.textContent=params.members;
+    newDiv.setAttribute('id',params.roomId)
+    newDiv.addEventListener('click', event=>{
+        console.log("소켓연결을 해야함",params)
+        const joinRoomMessage = {
+            type: 'joinRoom',
+            userId: params.creator,
+            message: params.members
+        };
+        socket.send(JSON.stringify(joinRoomMessage)); // JSON 형태로 요청 전송
+    })
+    targetNode.appendChild(newDiv);
+}
+
 
 
 /*

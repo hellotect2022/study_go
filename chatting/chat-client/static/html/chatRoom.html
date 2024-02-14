@@ -7,7 +7,7 @@
     <section style="border-width: 2; border-style: groove; width:20%; height: 400px; max-height: 400px; overflow-y: auto;">
         <h3 style="text-align: center;">현재 생성된 방 목록</h3>
         <ul id="room-list" style="list-style-type: none; padding-left: 0; overflow-x: auto;">
-            <li roomNumber="1" onclick="joinRoom(this)">테스트방이다</li>
+            <!-- <li roomNumber="1" onclick="joinRoom(this)">테스트방이다</li> -->
         </ul>
     </section>
     <section style="border-width: 2; border-style: groove; width: 70%; height: 400px; max-height: 400px; overflow-y: auto;">
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 });
 
 function chatServerWebsocketInit() {
-    socket.addEventListener('open', (event) => {
+    socketObject.socket.addEventListener('open', (event) => {
         console.log('Connected to server', event);
         socket.send(JSON.stringify({
             type:"connect",
@@ -37,7 +37,7 @@ function chatServerWebsocketInit() {
         }))
     })
 
-    socket.addEventListener('message', (event) => {
+    socketObject.socket.addEventListener('message', (event) => {
         console.log('Received message from server:', event.data); 
         const data = JSON.parse(event.data)
         if (data.type == 'connect') {
@@ -47,11 +47,11 @@ function chatServerWebsocketInit() {
         }
     });
 
-    socket.addEventListener('close', (event) => {
+    socketObject.socket.addEventListener('close', (event) => {
         console.log('Connection closed');
     });
 
-    socket.addEventListener('error', (event) => {
+    socketObject.socket.addEventListener('error', (event) => {
         console.error('WebSocket error:', event);
     });
 }

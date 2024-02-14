@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	chatClient "newProj/chatting/chat-client/model"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -15,6 +16,7 @@ import (
 var store = sessions.NewCookieStore([]byte("your-secret-key"))
 
 var tempRedis_userId = make(map[string]string)
+var tempRedis_roomId = make(map[string]interface{})
 
 func main() {
 	// 1. 정적 파일 서버 생성
@@ -27,6 +29,7 @@ func main() {
 	r.HandleFunc("/login", loginHandler).Methods("POST")
 	r.HandleFunc("/logout", logoutHandler).Methods("GET")
 	r.HandleFunc("/getUserListAll", getUserListAllHandler).Methods("GET")
+	r.HandleFunc("/createRoom", createRoomHandler).Methods("POST")
 
 	http.Handle("/", r)
 	fmt.Println("client Server is running on port 8080...")
@@ -105,6 +108,27 @@ func getUserListAllHandler(w http.ResponseWriter, r *http.Request) {
 
 	responseBody.Status = "success"
 	responseBody.Result = tempRedis_userId
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(responseBody)
+
+}
+
+func createRoomHandler(w http.ResponseWriter, r *http.Request) {
+	requestBody := chatClient.RoomInfo{}
+	responseBody := chatClient.ResponseData{}
+
+	json.NewDecoder(r.Body).Decode(&requestBody)
+	requestBody.RoomId = strconv.Itoa(len(tempRedis_roomId))
+	fmt.Println("새로 생성된 Room -> ", responseBody)
+	tempRedis_roomId[requestBody.RoomId] = requestBody
+	fmt.Println("서버에 생성된 RoomList -> ", tempRedis_roomId)
+	// 아마 여기서 redis pubsub 으로 구현할듯함
+
+	// 성공일때의 얘기
+	responseBody.Status = "success"
+	responseBody.Message = "채팅방을 생성하였습니다."
+	responseBody.Result = requestBody
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(responseBody)
