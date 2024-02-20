@@ -3,6 +3,7 @@
     margin: 0;
     padding: 0;
     height: 100vh;
+    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,49 +24,6 @@
         justify-content: space-evenly;
         box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6); /* x-offset, y-offset, blur-radius, color */
         
-    }
-
-    .content {
-        /*border: 2px solid;*/
-        flex-grow: 10;
-        border-radius: 15px;
-        box-sizing: border-box;
-        padding: 2px;
-        margin: 2px;
-        background-color: white;
-    }
-
-    .buttons {
-        flex-grow: 1;
-        display: flex;
-        justify-content: space-evenly;
-        /*border: 2px solid;*/
-        border-radius: 15px;
-        box-sizing: border-box;
-    }
-
-    .buttons button {
-        width: 100%; /* 버튼이 부모 요소인 .buttons의 너비를 꽉 차게 설정 */
-        height: auto; /* 버튼이 부모 요소인 .buttons의 높이를 꽉 차게 설정 */
-        border-radius: 15px; /* 버튼의 테두리를 둥글게 만듭니다. */
-        margin: 5px;
-        box-sizing: border-box;
-        background-color: #f2f2f2;
-        border : none;
-    }
-
-    .buttons button:hover {
-        /* 그림자 효과 */
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* x-offset, y-offset, blur-radius, color */
-        /*
-        transform: translateZ(3px); /* 버튼을 위로 3px 이동시켜 높낮이 효과를 줌 
-        transition: transform 0.1s ease; /* 부드러운 전환 효과를 주기 위한 transition 속성 
-        */
-    }
-
-    .buttons button:active {
-        background-color: lightgray; /* 클릭시 배경색을 빨간색으로 변경 */
-        opacity: 0.7; /* 클릭시 투명도를 0.7로 변경 */
     }
 
     .hidden {

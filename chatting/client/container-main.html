@@ -1,28 +1,124 @@
 <style>
+    .content {
+        /*border: 2px solid;*/
+        height: 90vh;
+        border-radius: 15px;
+        box-sizing: border-box;
+        padding: 2px;
+        margin: 2px;
+        background-color: white;
+        max-height: 85vh;
+        overflow-y: scroll;
+        scroll-behavior: auto;
+    }
+    /* 스크롤 바를 숨김 */
+    .content::-webkit-scrollbar {
+        display: none;
+    }
+
+    .buttons {
+        height: 10vh;
+        display: flex;
+        justify-content: space-evenly;
+        border-radius: 15px;
+        box-sizing: border-box;
+    }
+
+    [id^="btn-"]{
+        width: 90%;
+        height: 90%;
+        border-radius: 10%;
+        background-repeat: no-repeat; /* 반복 없앰 */
+        background-size: contain; /* 이미지가 요소에 맞게 크기 조절 */
+        background-position: center center; /* 가로와 세로 중앙 */
+    }
+
+    #btn-userList {
+        background-image: url("resources/home.svg");
+    }
+
+    #btn-userList.selection {
+        background-image: url("resources/home_select.svg");
+        opacity: 1; /* 클릭시 투명도를 0.7로 변경 */
+    }
+
+    #btn-chattingList {
+        background-image: url("resources/chatting.svg"); 
+    }
+
+    #btn-chattingList.selection {
+        background-image: url("resources/chatting_select.svg");
+        opacity: 1; /* 클릭시 투명도를 0.7로 변경 */
+    }
+
+    .buttons div {
+        flex:1;
+        height: 100%;
+        border-radius: 15px; /* 버튼의 테두리를 둥글게 만듭니다. */
+        margin: 5px;
+        box-sizing: border-box;
+        border : none;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     #content-userList > ul {
         list-style-type: none;
+        padding-left: 0;
+    }
+</style>
+<style>
+    .user-profile {
+        height : 50px;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        border-radius: 10px;
+        padding-bottom: 5px;
+    }
+
+    .user-container:hover {
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+        background-color: #ccc;
+    }
+
+    .user-image {
+        flex:1;
+        height:40px;
+        width: 40px;
+        border-radius: 50%;
+        background-image: url("resources/user_man.svg");
+        background-repeat: no-repeat; /* 반복 없앰 */
+        background-size: cover; /* 이미지가 요소에 맞게 크기 조절 */
+    }
+
+    .user-image-girl {
+        background-image: url("resources/user_girl.svg");
+        background-repeat: no-repeat; /* 반복 없앰 */
+        background-size: cover; /* 이미지가 요소에 맞게 크기 조절 */
+    }
+
+    .user-image-man {
+        background-image: url("resources/user_man.svg");
+        background-repeat: no-repeat; /* 반복 없앰 */
+        background-size: cover; /* 이미지가 요소에 맞게 크기 조절 */
+    }
+
+    .user-bio {
+        margin:0px 5px;
+        flex: 8;
     }
 </style>
 
 <div class="content">
-    <div id="content-userList" >
-        <ul>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-            <li>test</li>
-        </ul>
-    </div>
+    <div id="content-userList" ><ul></ul></div>
     <div id="content-chattingList" class="hidden">탭2</div>
+    <div id="content-chattingRoom" class="hidden"></div>
 </div>
 <div class="buttons">
-    <button class="ui-buttons" name="userList">사용자 목록</button>
-    <button class="ui-buttons" name="chattingList">채팅 목록</button>
+    <div id="btn-userList" name="userList" class="selection"></div>
+    <div id="btn-chattingList" name="chattingList"></div>
+    <div id="btn-chattingList" name="chattingRoom"></div>
 </div>
