@@ -1,1 +1,212 @@
-<h1>hello!!</h1>
+<style>
+    div {
+        /* border: 2px solid black; */
+        box-sizing: border-box;
+    }
+
+    .back {
+        height: 6%;
+        padding: 5px;
+        /* border: 2px solid black;  */
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        border-radius: 5px;
+    }
+
+    .back img {
+        height: 100%;
+    }
+
+    .back img:active {
+        opacity: 0.6;
+    }
+
+    .room {
+        height: 85%;
+        overflow-y: auto;
+    }
+
+    .message-box {
+        display: flex;
+        /* border: 2px solid black; */
+        box-sizing: border-box;
+        margin: 2px;
+    }
+
+    .profile {
+        max-width: 10%;
+        min-width: 10%;
+        margin: 4px;
+    }
+
+    .profile img {
+        border-radius: 50%;
+        border: 1px solid;
+    }
+
+    .message {
+        max-width: 55%;
+        display: flex;
+        flex-direction: column;
+        /* border: 2px solid red; */
+    }
+
+    .name {
+        max-width: max-content;
+        font-weight: bold;
+        /* border: 2px solid blue */
+    }
+
+    .text {
+        margin-top: 2px;
+        max-width: max-content;
+        /* border: 1px solid black; */
+        background-color: orange;
+        overflow-wrap: break-word;
+        border-radius: 10px;
+        padding: 2px 5px;
+    }
+
+    .you {
+        justify-content: flex-end;
+    }
+
+    .chat-box {
+        /* border: 1px solid red; */
+        height: 9%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 15px;
+        padding: 5px;
+    }
+
+    .chat-box input{
+        /* border: 2px solid green; */
+        height: 100%;
+        flex:8;
+        border-radius: 15px;
+        background-color: aliceblue;
+        border-style: none;
+        padding: 3px;
+    }
+
+    .chat-box button{
+        /* border: 5px solid purple; */
+        height: 100%;
+        flex:1;
+        margin: 2px;
+        /* max-height: 50px;
+        max-width: 50px; */
+        background-image: url("resources/plane.png");
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: contain;
+        border-radius: 20%;
+        border-style: none;
+        background-color: aliceblue;
+        
+        
+    }
+
+    .chat-box button:active{
+        background-color:azure;
+    }
+
+</style>
+<div class="back">
+    <img src="resources/arrow.png"/>
+</div>
+<div class="room">
+    <div class="message-box">
+        <div class="profile">
+            <img src="./resources/user_man.svg"/>
+        </div>
+        <div class="message">
+            <div class="name">my name</div>
+            <div class="text"> 
+                mememememememememememmemememememememmememememefasdfasdfasdfasdfasdfasd
+                sdfassdfasdfasdf
+            </div>    
+        </div>   
+    </div>
+
+
+    <div class="message-box you">
+        <div class="message">
+            <div class="text"> 
+                memememesdfassdfasdfasdf
+sdafsd
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box you">
+        <div class="message">
+            <div class="text"> 
+                memememesdfassdfasdfasdf
+sdafsd
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box you">
+        <div class="message">
+            <div class="text"> 
+                memememesdfassdfasdfasdf
+sdafsd
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box you">
+        <div class="message">
+            <div class="text"> 
+                memememesdfassdfasdfasdf
+sdafsd
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box">
+        <div class="profile">
+            <img src="./resources/user_man.svg"/>
+        </div>
+        <div class="message">
+            <div class="name">my name</div>
+            <div class="text"> 
+                mememememememememememmemememememememmememememefasdfasdfasdfasdfasdfasd
+                sdfassdfasdfasdf
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box">
+        <div class="profile">
+            <img src="./resources/user_man.svg"/>
+        </div>
+        <div class="message">
+            <div class="name">my name</div>
+            <div class="text"> 
+                mememememememememememmemememememememmememememefasdfasdfasdfasdfasdfasd
+                sdfassdfasdfasdf
+            </div>    
+        </div>   
+    </div>
+
+    <div class="message-box">
+        <div class="profile">
+            <img src="./resources/user_man.svg"/>
+        </div>
+        <div class="message">
+            <div class="name">my name</div>
+            <div class="text"> 
+                mememememememememememmemememememememmememememefasdfasdfasdfasdfasdfasd
+                sdfassdfasdfasdf
+            </div>    
+        </div>   
+    </div>
+</div>
+<div class="chat-box">
+    <input type="text" placeholder="메세지를 입력하세요 ..."/>
+    <button></button>
+</div>

@@ -16,9 +16,9 @@ async function importPage(target, callback) {
 }
 
 function initMain(){
+    openChattingRoom();
     //1. 페이지에 관련된 UI components 및 이벤트 할당
     renderMainComponents();
-    document.getElementsByClassName
     //2. 페이지에 필요한 데이타를 받아오는 기능구현
     fetchData();
 }
