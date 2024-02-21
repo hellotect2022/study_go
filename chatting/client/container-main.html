@@ -1,3 +1,4 @@
+<!-- container.html 관련 css -->
 <style>
     .content {
         /*border: 2px solid;*/
@@ -68,26 +69,31 @@
         list-style-type: none;
         padding-left: 0;
     }
+
 </style>
+<!-- user-profile.html css -->
 <style>
     .user-profile {
-        height : 50px;
+        /* height : 60px; */
         display: flex;
         width: 100%;
         align-items: center;
         border-radius: 10px;
         padding-bottom: 5px;
+        margin: 5px;
     }
 
-    .user-container:hover {
+    .user-profile:hover {
         box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
-        background-color: #ccc;
+        background-color: aliceblue;;
     }
 
     .user-image {
         flex:1;
         height:40px;
         width: 40px;
+        min-width: 40px;
+        min-height: 40px;
         border-radius: 50%;
         background-image: url("resources/user_man.svg");
         background-repeat: no-repeat; /* 반복 없앰 */
@@ -108,14 +114,27 @@
 
     .user-bio {
         margin:0px 5px;
-        flex: 8;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-bio div {
+        width: max-content;
+        overflow-wrap: break-word;
+        height: 100%;
+        width: 90%;
+
+    }
+
+    .user-bio span {
+        width: fit-content;
     }
 </style>
 
 <div class="content">
-    <div id="content-userList" class="hidden"><ul></ul></div>
+    <div id="content-userList" ><ul></ul></div>
     <div id="content-chattingList" class="hidden">탭2</div>
-    <div id="content-chattingRoom" ></div>
+    <div id="content-chattingRoom" class="hidden"></div>
 </div>
 <div class="buttons">
     <div id="btn-userList" name="userList" class="selection"></div>
