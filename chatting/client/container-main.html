@@ -11,6 +11,7 @@
         max-height: 85vh;
         overflow-y: scroll;
         scroll-behavior: auto;
+        position: relative;
     }
     /* 스크롤 바를 숨김 */
     .content::-webkit-scrollbar {
@@ -113,6 +114,7 @@
     }
 
     .user-bio {
+        width: 100%;
         margin:0px 5px;
         display: flex;
         flex-direction: column;
@@ -131,13 +133,25 @@
     }
 </style>
 
+<style>
+    [id^="content-"] {
+        border:2px solid salmon;
+        height: 100%;
+        width: 100%;
+        top: 0%;
+        left: 0%;
+        box-sizing: border-box;
+        position: absolute;
+        background-color: whitesmoke;
+    }
+</style>
 <div class="content">
-    <div id="content-userList" ><ul></ul></div>
-    <div id="content-chattingList" class="hidden">탭2</div>
-    <div id="content-chattingRoom" class="hidden"></div>
+    <div id="content-userList" style="z-index: 1;"><ul></ul></div>
+    <div id="content-chattingList" style="z-index: 0;">탭2</div>
+    <!-- <div id="content-chattingRoom" class="hidden" style="z-index: 2;"></div> -->
 </div>
 <div class="buttons">
     <div id="btn-userList" name="userList" class="selection"></div>
     <div id="btn-chattingList" name="chattingList"></div>
-    <div id="btn-chattingList" name="chattingRoom"></div>
+    <!-- <div id="btn-chattingList" name="chattingRoom"></div> -->
 </div>
